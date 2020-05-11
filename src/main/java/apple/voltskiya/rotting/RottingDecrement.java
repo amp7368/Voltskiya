@@ -171,7 +171,7 @@ class RottingDecrement {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> dealWithOpenInventory(inventory, plugin, true), 20 * WATCH_TIME / 1000);
             }
         } else {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> dealWithOpenInventory(inventory, plugin, false), 20);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> dealWithOpenInventory(inventory, plugin, false), 40);
         }
     }
 
