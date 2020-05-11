@@ -1,0 +1,34 @@
+name: VoltskiyaApple
+version: "1.0"
+api-version: "1.15"
+author: Apple
+main: apple.voltskiya.VoltskiyaAppleMain
+description: make any entity not have a damage cooldown
+commands:
+  power_tool:
+    description: sets the given command to the item in the current player's hand
+    permission: voltskiya.powertool
+    permission-message: You do not have permission!
+  power_tool_list:
+    description: lists all the commands in the powertool in the players hand
+    permission: voltskiya.powertool
+    permission-message: You do not have permission!
+  power_tool_clear:
+    description: clears the powertool of the item in the players hand
+    permission: voltskiya.powertool
+    permission-message: You do not have permission!
+  power_tool_clear_all:
+    description: clears the powertool of the items in the players inventory
+    permission: voltskiya.powertool
+    permission-message: You do not have permission!
+  cooler_generate:
+    description: gives the player a chest with the tag cooler
+    permission: voltskiya.rotting
+    permission-message: You do not have permission!
+permissions:
+  voltskiya.powertool:
+    description: allows the user to set powertools
+    default: op
+  voltskiya.generate:
+    description: allows the user to do anything related to the rotting plugin
+    default: op
