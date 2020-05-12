@@ -313,17 +313,4 @@ class RottingMerge implements Listener {
         cursorItem.setAmount(cursorItem.getAmount() - numToMove);
         return true;
     }
-
-    public static void mergeItemAfter(Inventory destination, ItemStack item) {
-        for (ItemStack content : destination.getContents()) {
-            if (content != null) // content can be null!
-                if (item.getType().equals(content.getType()) && item.getItemMeta() != null &&
-                        item.getItemMeta().equals(content.getItemMeta())) {
-                    shiftMove(destination, content);
-                }
-        }
-
-
-    }
-
 }

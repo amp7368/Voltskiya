@@ -3,7 +3,7 @@ version: "1.0"
 api-version: "1.15"
 author: Apple
 main: apple.voltskiya.VoltskiyaAppleMain
-description: make any entity not have a damage cooldown
+description: a super-plugin that houses many smaller plugins for Voltskiya
 commands:
   power_tool:
     description: sets the given command to the item in the current player's hand

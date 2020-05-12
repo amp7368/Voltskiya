@@ -5,12 +5,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -171,7 +168,7 @@ class RottingDecrement {
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> dealWithOpenInventory(inventory, plugin, true), 20 * WATCH_TIME / 1000);
             }
         } else {
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> dealWithOpenInventory(inventory, plugin, false), 20);
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> dealWithOpenInventory(inventory, plugin, false), 40);
         }
     }
 

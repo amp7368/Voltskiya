@@ -1,9 +1,10 @@
 package apple.voltskiya.rotting;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import org.bukkit.block.Hopper;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.HopperMinecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -15,6 +16,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -59,26 +61,16 @@ class RottingListener implements Listener {
 
     @EventHandler
     public void onInventoryMove(InventoryMoveItemEvent event) {
-        // deal with a hopper or something putting an item into another inventory
-        ItemStack oldItem = event.getItem();
-        if (IsRottable.isRottable(oldItem.getType())) {
-            boolean isFuel = false;
-            if (RottingMain.furanceTypes.contains(event.getDestination().getType())) {
-                Location locSource = event.getSource().getLocation();
-                Location locDestination = event.getDestination().getLocation();
-                if (locSource == null || locDestination == null) {
-                    // ignore? idk how this is null
-                    return;
-                }
-                if (locSource.getBlockY() == locDestination.getBlockY()) {
-                    isFuel = true;
-                }
-            }
-
-            if (isFuel)
-                return;
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin,
-                    () -> RottingMerge.mergeItemAfter(event.getDestination(), oldItem), 0);
+        System.out.println(event.getItem().getType() + " is being moved");
+        InventoryHolder initiator = event.getInitiator().getHolder();
+        if (initiator instanceof Hopper) {
+            RottingHopper.hopperDone.put(((Hopper) initiator).getBlock().getLocation(), false);
+            ItemStack item = event.getItem();
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> RottingHopper.dealWithHopperMove(event, item, item.getAmount()), 0);
+        } else if (initiator instanceof HopperMinecart) {
+            RottingHopper.minecartHopperDone.put(((HopperMinecart) initiator).getUniqueId(), false);
+            ItemStack item = event.getItem();
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> RottingHopper.dealWithHopperMove(event, item, item.getAmount()), 0);
         }
     }
 
