@@ -30,6 +30,7 @@ class RottingHopper {
             }
         } else if (initiator instanceof Hopper) {
             synchronized (moveSyncObject) {
+                // test
                 /*
                 I need this sync object in case someone gets the object and uses the wrong reference.
                 This shouldn't impact performance by anything really as the calls are called one after the other. (I believe)
