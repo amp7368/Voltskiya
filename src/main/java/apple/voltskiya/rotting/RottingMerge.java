@@ -94,21 +94,23 @@ public class RottingMerge implements Listener {
         ItemStack[] destinationContents = destination.getContents();
         // get the first item where it would accept me
         for (int i = 0; i < destinationContents.length; i++) {
-            ItemStack item = destinationContents[i];
-            if (item == null || item.getType().isAir()) {
-                // this shouldn't ever happen as the item should have been moved without me doing anything
-                ItemStack newItem = new ItemStack(oldItem);
-                newItem.setAmount(1);
-                destination.setItem(i, newItem);
-                oldItem.setAmount(oldItem.getAmount() - 1);
-                return true;
-            }
-            if (mergeItems(false, oldItem, item))
-                return true;
+            if (pushItem(destination, oldItem, destinationContents[i], i)) return true;
             // otherwise try the other items
         }
 
         return false;
+    }
+
+    public static boolean pushItem(Inventory destination, ItemStack oldItem, ItemStack destinationContent, int slot) {
+        if (destinationContent == null || destinationContent.getType().isAir()) {
+            // this shouldn't ever happen as the item should have been moved without me doing anything
+            ItemStack newItem = new ItemStack(oldItem);
+            newItem.setAmount(1);
+            destination.setItem(slot, newItem);
+            oldItem.setAmount(oldItem.getAmount() - 1);
+            return true;
+        }
+        return mergeItems(false, oldItem, destinationContent);
     }
 
     public static int shiftMove(Inventory destination, @NotNull ItemStack source) {

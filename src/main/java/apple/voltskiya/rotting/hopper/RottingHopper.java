@@ -1,10 +1,12 @@
 package apple.voltskiya.rotting.hopper;
 
+import apple.voltskiya.rotting.RottingMain;
 import apple.voltskiya.rotting.RottingMerge;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Hopper;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -83,10 +85,34 @@ public class RottingHopper {
             // if there are no more items in the list to check, just leave
 
             InventoryMoveItemEvent event = hopperDone.secondWaveMergeEvents.remove(0);
-            if (RottingMerge.pushItem(event.getDestination(), event.getItem())) {
-                // then stop
+            Inventory destination = event.getDestination();
+            if (RottingMain.furanceTypes.contains(destination.getType())) {
+                ItemStack[] destinationContents = destination.getContents();
+                Location sourceLocation = event.getSource().getLocation();
+                Location destinationLocation = event.getDestination().getLocation();
                 hopperDone.clear();
-                return;
+                if (sourceLocation == null || destinationLocation == null)
+                    // idk how this happened, but just ignore it.
+                    return;
+                if (sourceLocation.getBlockY() != destinationLocation.getBlockY()) {
+                    // then put it in the 0th slot
+                    if (RottingMerge.pushItem(destination, event.getItem(), destinationContents[0], 0))
+                        // then stop
+                        return;
+                } else {
+                    // then put it in the 1th slot
+                    if (RottingMerge.pushItem(destination, event.getItem(), destinationContents[1], 1))
+                        // then stop
+                        return;
+                }
+            } else if (destination.getType() == InventoryType.BREWING) {
+
+            } else {
+                if (RottingMerge.pushItem(destination, event.getItem())) {
+                    // then stop
+                    hopperDone.clear();
+                    return;
+                }
             }
         }
 
