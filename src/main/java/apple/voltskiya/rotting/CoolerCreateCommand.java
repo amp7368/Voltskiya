@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 class CoolerCreateCommand implements CommandExecutor {
-    private JavaPlugin plugin;
 
     public CoolerCreateCommand(JavaPlugin plugin) {
         @Nullable PluginCommand command = plugin.getCommand(YmlNavigateCommands.CREATE_COOLER);
@@ -25,7 +24,6 @@ class CoolerCreateCommand implements CommandExecutor {
             return;
         }
         command.setExecutor(this);
-        this.plugin = plugin;
     }
 
     @Override

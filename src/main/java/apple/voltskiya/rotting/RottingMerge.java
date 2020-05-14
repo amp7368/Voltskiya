@@ -115,15 +115,19 @@ public class RottingMerge implements Listener {
 
     public static int shiftMove(Inventory destination, @NotNull ItemStack source) {
         boolean isFurnace = RottingMain.furanceTypes.contains(destination.getType());
-
+        boolean isBrewingStand = destination.getType() == InventoryType.BREWING;
         // if this is a food that we should worry about
         if (IsRottable.isRottable(source.getType())) {
             ItemStack[] contents = destination.getContents();
             int emptySlot = -1;
             for (int i = 0; i < contents.length; i++) {
-                if (isFurnace)
+                if (isFurnace) {
                     if (i == 2)
                         continue;
+                } else if (isBrewingStand) {
+                    if (i != 3)
+                        continue;
+                }
 
                 ItemStack content = contents[i];
                 if (content == null || content.getType() == Material.AIR) {

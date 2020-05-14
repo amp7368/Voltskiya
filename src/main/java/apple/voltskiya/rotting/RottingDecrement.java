@@ -219,7 +219,6 @@ class RottingDecrement {
                 string.append(" minutes, ");
         }
         if ((started || second != 0) && check != 4 && check != 3) {
-            started = true;
             string.append(second);
             if (second == 1)
                 string.append(" second");

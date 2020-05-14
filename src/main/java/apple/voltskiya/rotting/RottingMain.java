@@ -41,7 +41,7 @@ public class RottingMain {
         new RenameListener(pl);
         new RottingSmeltListener(pl);
 
-        new SlotFinderListener(pl);
+//        new SlotFinderListener(pl);
 
         System.out.println("[VoltskiyaApple] [Rotting] enabled");
     }

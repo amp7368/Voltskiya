@@ -106,7 +106,9 @@ public class RottingHopper {
                         return;
                 }
             } else if (destination.getType() == InventoryType.BREWING) {
-
+                if (RottingMerge.pushItem(destination, event.getItem(), destination.getContents()[3], 3))
+                    // then stop
+                    return;
             } else {
                 if (RottingMerge.pushItem(destination, event.getItem())) {
                     // then stop
