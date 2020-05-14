@@ -18,10 +18,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-class RottingMerge implements Listener {
+public class RottingMerge implements Listener {
     RottingMerge(JavaPlugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
+
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onInventoryClick(InventoryClickEvent event) {
@@ -87,6 +88,27 @@ class RottingMerge implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
+
+    public static boolean pushItem(Inventory destination, ItemStack oldItem) {
+        ItemStack[] destinationContents = destination.getContents();
+        // get the first item where it would accept me
+        for (int i = 0; i < destinationContents.length; i++) {
+            ItemStack item = destinationContents[i];
+            if (item == null || item.getType().isAir()) {
+                // this shouldn't ever happen as the item should have been moved without me doing anything
+                ItemStack newItem = new ItemStack(oldItem);
+                newItem.setAmount(1);
+                destination.setItem(i, newItem);
+                oldItem.setAmount(oldItem.getAmount() - 1);
+                return true;
+            }
+            if (mergeItems(false, oldItem, item))
+                return true;
+            // otherwise try the other items
+        }
+
+        return false;
     }
 
     public static int shiftMove(Inventory destination, @NotNull ItemStack source) {
@@ -255,7 +277,6 @@ class RottingMerge implements Listener {
         } else {
             return false;
         }
-
         @NotNull PersistentDataContainer cursorContainer = cursorMeta.getPersistentDataContainer();
         @NotNull PersistentDataContainer invContainer = invMeta.getPersistentDataContainer();
 
@@ -274,6 +295,7 @@ class RottingMerge implements Listener {
                 return false;
 
         }
+
         if (invCountdown == null) {
             Long timeToRot = RottingMain.rottingChart.getOrDefault(invItem.getType().toString(), (long) -1);
             if (timeToRot == -1)
@@ -311,6 +333,6 @@ class RottingMerge implements Listener {
 
         // set the amount of the item in the cursor
         cursorItem.setAmount(cursorItem.getAmount() - numToMove);
-        return true;
+        return numToMove != 0;
     }
 }

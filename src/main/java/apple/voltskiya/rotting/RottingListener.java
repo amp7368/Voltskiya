@@ -1,6 +1,8 @@
 package apple.voltskiya.rotting;
 
+import apple.voltskiya.rotting.hopper.RottingHopper;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.block.Hopper;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -18,6 +20,8 @@ import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 class RottingListener implements Listener {
@@ -61,16 +65,27 @@ class RottingListener implements Listener {
 
     @EventHandler
     public void onInventoryMove(InventoryMoveItemEvent event) {
-        System.out.println(event.getItem().getType() + " is being moved");
         InventoryHolder initiator = event.getInitiator().getHolder();
         if (initiator instanceof Hopper) {
-            RottingHopper.hopperDone.put(((Hopper) initiator).getBlock().getLocation(), false);
-            ItemStack item = event.getItem();
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> RottingHopper.dealWithHopperMove(event, item, item.getAmount()), 0);
+            Location location = ((Hopper) initiator).getBlock().getLocation();
+            RottingHopper.addEvent(plugin, location, event);
         } else if (initiator instanceof HopperMinecart) {
-            RottingHopper.minecartHopperDone.put(((HopperMinecart) initiator).getUniqueId(), false);
-            ItemStack item = event.getItem();
-            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> RottingHopper.dealWithHopperMove(event, item, item.getAmount()), 0);
+            RottingHopper.addEvent(plugin, ((HopperMinecart) initiator).getUniqueId(), event);
+        }
+        ItemStack item = event.getItem();
+        if (IsRottable.isRottable(item.getType())) {
+            ItemMeta itemMeta = item.getItemMeta();
+            if (itemMeta == null)
+                return;
+            boolean isVanilla = itemMeta.getDisplayName().isEmpty();
+            if (!isVanilla) {
+                Integer vanilla = itemMeta.getPersistentDataContainer().get(RottingMain.vanilla, PersistentDataType.INTEGER);
+                isVanilla = vanilla != null && vanilla == 1;
+            }
+            if (isVanilla) {
+                // this is a food item that may or may not stack
+                event.setCancelled(true);
+            }
         }
     }
 
