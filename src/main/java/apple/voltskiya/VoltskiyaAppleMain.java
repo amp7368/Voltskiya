@@ -2,6 +2,7 @@ package apple.voltskiya;
 
 import apple.voltskiya.disabledCrafting.DisabledCraftingMain;
 import apple.voltskiya.enchantImmunity.ImmunityMain;
+import apple.voltskiya.hostile.HostileMain;
 import apple.voltskiya.mobGear.EquipMain;
 import apple.voltskiya.noDamage.NoDamageMain;
 import apple.voltskiya.noRegen.NoRegenMain;
