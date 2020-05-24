@@ -1,5 +1,6 @@
 package apple.voltskiya;
 
+import apple.voltskiya.bedTeleportScroll.BedTeleportMain;
 import apple.voltskiya.disabledCrafting.DisabledCraftingMain;
 import apple.voltskiya.enchantImmunity.ImmunityMain;
 import apple.voltskiya.hostile.HostileMain;
@@ -22,6 +23,7 @@ public class VoltskiyaAppleMain extends JavaPlugin {
         ImmunityMain.enable(this);
         RottingMain.enable(this);
         DisabledCraftingMain.enable(this);
+        BedTeleportMain.enable(this);
 //        HostileMain.enable(this);
 
         System.out.println("[VoltskiyaApple] enabled");
