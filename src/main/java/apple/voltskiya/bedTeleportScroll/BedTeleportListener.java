@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -44,17 +45,24 @@ public class BedTeleportListener implements Listener {
                 return;
             teleportations.add(uid);
             // start the teleportation
-            incrementalTeleportPlayer(20 / INCREMENT * SECONDS_FOR_TELEPORT, player, bed, itemInHand);
+            incrementalTeleportPlayer(20 * SECONDS_FOR_TELEPORT, player, bed, itemInHand);
         }
     }
 
     private void incrementalTeleportPlayer(int sessionsLeft, Player player, Location bed, ItemStack itemInHand) {
         if (sessionsLeft == 0) {
-            player.teleport(bed);
-            itemInHand.setAmount(itemInHand.getAmount() - 1);
-            spawnBedTeleportParticles(bed);
-            synchronized (teleportationsSync) {
-                teleportations.remove(player.getUniqueId());
+            if (player.getInventory().contains(itemInHand)) {
+                player.teleport(bed);
+                itemInHand.setAmount(itemInHand.getAmount() - 1);
+                spawnBedTeleportParticles(bed);
+                synchronized (teleportationsSync) {
+                    teleportations.remove(player.getUniqueId());
+                }
+            } else {
+                player.sendMessage(ChatColor.RED + "You must have dropped the scroll.");
+                synchronized (teleportationsSync) {
+                    teleportations.remove(player.getUniqueId());
+                }
             }
         } else {
             boolean contains;
@@ -63,9 +71,9 @@ public class BedTeleportListener implements Listener {
             }
             if (contains) {
                 spawnBedTeleportParticles(player.getLocation());
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, INCREMENT + 2, 5));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, INCREMENT + 2, 1));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, INCREMENT + 2, 1));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, INCREMENT + 30, 9, false, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, INCREMENT + 30, 1, false, false));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, INCREMENT + 30, -10, false, false));
                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> incrementalTeleportPlayer(sessionsLeft - INCREMENT, player, bed, itemInHand), INCREMENT);
             }
         }
@@ -80,7 +88,6 @@ public class BedTeleportListener implements Listener {
             double addZ = random.nextDouble() * 2 - 1;
             BlockData fallingDustData = Material.BLACK_CONCRETE.createBlockData();
             world.spawnParticle(Particle.FALLING_DUST, loc.clone().add(new Vector(addX, addY, addZ)), 5, fallingDustData);
-//            world.spawnParticle(Particle.SQUID_INK, loc.clone().add(new Vector(addX, addY, addZ)), 0);
         }
     }
 
@@ -123,5 +130,13 @@ public class BedTeleportListener implements Listener {
 
             }
         }
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent event) {
+        synchronized (teleportationsSync) {
+            teleportations.remove(event.getPlayer().getUniqueId());
+        }
+
     }
 }

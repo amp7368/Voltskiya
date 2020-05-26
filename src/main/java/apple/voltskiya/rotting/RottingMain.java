@@ -37,9 +37,9 @@ public class RottingMain {
         vanilla = new NamespacedKey(pl, TagsNavigate.VANILLA);
         new RottingListener(pl);
         new RottingMerge(pl);
-        new CoolerCreateCommand(pl);
         new RenameListener(pl);
         new RottingSmeltListener(pl);
+        new CoolerPlaceListener(pl);
 
 //        new SlotFinderListener(pl);
 

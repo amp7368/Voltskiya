@@ -21,10 +21,6 @@ commands:
     description: clears the powertool of the items in the players inventory
     permission: voltskiya.powertool
     permission-message: You do not have permission!
-  cooler_generate:
-    description: gives the player a chest with the tag cooler
-    permission: voltskiya.rotting
-    permission-message: You do not have permission!
 permissions:
   voltskiya.powertool:
     description: allows the user to set powertools

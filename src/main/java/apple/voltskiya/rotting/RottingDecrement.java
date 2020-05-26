@@ -115,7 +115,9 @@ class RottingDecrement {
             if (cooler == null) {
                 multiplier = 0.5;
             } else if (cooler == 1) {
-                multiplier = 0.025;
+                multiplier = 0.333;
+            } else if (cooler == 2) {
+                multiplier = 0.25;
             } else {
                 multiplier = 0.5;
             }
